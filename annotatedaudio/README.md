@@ -12,52 +12,12 @@ app_file: space.py
 # `gradio_annotated_audio`
 <img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.1%20-%20orange">  
 
-A drop-in replacement for `gr.Audio` that adds an annotation layer on top of the waveform: an
-auto-colored **speaker lane** derived from a transcript, any number of configurable **category
-lanes** (voice activity, hate speech, or anything else you want to flag — as either a single point
-in time or a time range), and a synced, click-to-seek **transcript panel** underneath. It's a
-read-only visualization component — you supply the audio plus (optionally) `categories`,
-`annotations`, and `transcript`, and it renders them; there's no in-UI editing.
-
-Everything is optional. With none of the three new props set, it behaves exactly like `gr.Audio`.
+Python library for easily interacting with trained machine learning models
 
 ## Installation
 
-This component isn't published on PyPI or the Hugging Face Hub — it lives in this repo as a
-regular [Gradio custom component](https://www.gradio.app/guides/custom-components-in-five-minutes).
-Pick whichever of these fits how you want to consume it in your own project:
-
-**Use it straight from this repo (editable install), for local development:**
-
 ```bash
-git clone <this-repo-url>
-pip install -e <this-repo-url-path>/annotatedaudio
-```
-
-**Install directly from git**, without cloning first (swap in your repo URL once this is pushed somewhere):
-
-```bash
-pip install "git+https://github.com/<you>/<repo>.git#subdirectory=annotatedaudio"
-```
-
-**Build a wheel and install/ship that**, if you'd rather distribute a build artifact:
-
-```bash
-cd annotatedaudio
-gradio cc build          # produces dist/gradio_annotated_audio-<version>-py3-none-any.whl
-pip install dist/gradio_annotated_audio-*.whl
-```
-
-**Publish it yourself**, if you want `pip install gradio_annotated_audio` to work for others:
-run `gradio cc publish` from the `annotatedaudio/` directory (requires a PyPI account, and
-optionally a Hugging Face account for a docs Space). This repo does not do that publishing step
-for you.
-
-Once installed by any of the above, use it like any other Gradio component:
-
-```python
-import gradio as gr
-from gradio_annotated_audio import AnnotatedAudio
+pip install gradio_annotated_audio
 ```
 
 ## Usage
@@ -126,63 +86,6 @@ with gr.Blocks() as demo:
 if __name__ == "__main__":
     demo.launch()
 
-```
-
-## Features
-
-- **Speaker lane** — auto-derived from `transcript[].speaker`, auto-colored, no extra config.
-- **Category lanes** — one per `categories` entry, in the order you declare them; each renders
-  that category's `annotations`, mixing point markers (vertical lines) and time-range blocks
-  freely within the same lane.
-- **Legend + visibility toggle** — every lane (speaker and category) has a label on its left edge;
-  click it to hide/show just that lane, which doubles as the legend.
-- **Hover tooltips** — hovering any marker or range shows its `label` (or, for the speaker lane,
-  the speaker name).
-- **Click-to-seek** — clicking a marker, a range, or a transcript row seeks playback to that time
-  and starts playing.
-- **Synced transcript** — the transcript panel below the waveform auto-highlights and auto-scrolls
-  to whichever segment is currently playing.
-- **Graceful degradation** — omit `categories`, `annotations`, and `transcript` entirely and the
-  component is just a normal audio player.
-
-## Annotation data model
-
-Three props drive the annotation layer, all optional and independent of each other:
-
-**`categories`** — declares the lanes shown under the waveform, in the order given. Each item
-needs a unique `key`; `label` (defaults to `key`) and `color` (defaults to an auto-assigned color
-from a built-in palette) are optional.
-
-```python
-categories = [
-    {"key": "vad", "label": "Voice Activity", "color": "#3b82f6"},
-    {"key": "hate_speech", "label": "Hate Speech"},  # color auto-assigned
-]
-```
-
-**`annotations`** — a flat list of point or range annotations, each referencing a `categories`
-entry by its `category` key. `kind` is required and selects which shape the rest of the dict
-takes:
-
-```python
-annotations = [
-    # a point in time -> rendered as a vertical line
-    {"category": "turn", "kind": "point", "time": 6.0, "label": "End of turn 2"},
-    # a time range -> rendered as a shaded block
-    {"category": "vad", "kind": "range", "start": 2.3, "end": 5.8, "label": "speech"},
-]
-```
-
-`label` is optional on both shapes; if omitted, the tooltip just shows the category's `label`.
-
-**`transcript`** — a list of timestamped segments. `speaker` is optional; segments that have one
-populate the auto-colored speaker lane and get a colored speaker badge in the transcript panel.
-
-```python
-transcript = [
-    {"start": 0.2, "end": 1.9, "text": "Hey, how's the deployment going?", "speaker": "Speaker A"},
-    {"start": 2.3, "end": 3.9, "text": "It's mostly fine, just one flaky test.", "speaker": "Speaker B"},
-]
 ```
 
 ## `AnnotatedAudio`
