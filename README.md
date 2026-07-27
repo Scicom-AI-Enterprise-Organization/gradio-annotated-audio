@@ -4,11 +4,13 @@
 A drop-in replacement for `gr.Audio` that adds an annotation layer on top of the waveform: an
 auto-colored **speaker lane** derived from a transcript, any number of configurable **category
 lanes** (voice activity, hate speech, or anything else you want to flag — as either a single point
-in time or a time range), and a synced, click-to-seek **transcript panel** underneath. It's a
-read-only visualization component — you supply the audio plus (optionally) `categories`,
-`annotations`, and `transcript`, and it renders them; there's no in-UI editing.
+in time or a time range), and a synced, click-to-seek **transcript panel** underneath. Annotations
+and transcript are read-only (there's no in-UI editing of them), but the audio itself can still be
+recorded or uploaded interactively, just like `gr.Audio`.
 
 Everything is optional. With none of the three new props set, it behaves exactly like `gr.Audio`.
+
+![AnnotatedAudio component showing a waveform with speaker, turn boundary, voice activity, and hate speech lanes, plus a synced transcript panel below](assets/screenshot.png)
 
 ## Installation
 
@@ -108,7 +110,8 @@ with gr.Blocks() as demo:
         annotations=annotations,
         transcript=transcript,
         label="Conversation",
-        interactive=False,
+        interactive=True,
+        sources=["upload", "microphone"],
     )
 
 
@@ -116,6 +119,12 @@ if __name__ == "__main__":
     demo.launch()
 
 ```
+
+Clicking a transcript row seeks the waveform to that segment, and playback highlights the row in
+sync. Since the component is interactive here, the upload/microphone icons at the bottom let you
+swap in your own audio to annotate:
+
+![Demo: clicking a transcript row seeks the waveform, and playback advances the highlighted segment](assets/demo.gif)
 
 ## Features
 
