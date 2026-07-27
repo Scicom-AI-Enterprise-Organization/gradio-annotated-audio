@@ -94,7 +94,8 @@ with gr.Blocks() as demo:
         annotations=annotations,
         transcript=transcript,
         label="Conversation",
-        interactive=False,
+        interactive=True,
+        sources=["upload", "microphone"],
     )
 
 
