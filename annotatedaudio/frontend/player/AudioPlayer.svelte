@@ -446,6 +446,7 @@
 			{annotations}
 			{transcript}
 			duration={audio_duration}
+			{current_time}
 			onseek={seek_and_play}
 		/>
 

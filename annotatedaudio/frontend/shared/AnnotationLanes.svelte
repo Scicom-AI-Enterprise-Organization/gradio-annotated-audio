@@ -12,12 +12,14 @@
 		annotations = null,
 		transcript = null,
 		duration = 0,
+		current_time = 0,
 		onseek
 	}: {
 		categories?: CategoryData[] | null;
 		annotations?: AnnotationData[] | null;
 		transcript?: TranscriptSegment[] | null;
 		duration?: number;
+		current_time?: number;
 		onseek: (time: number) => void;
 	} = $props();
 
@@ -109,6 +111,7 @@
 							{/if}
 						</div>
 					{/each}
+					<div class="playhead" style:left="{pct(current_time)}%"></div>
 				</div>
 			</div>
 		{/each}
@@ -198,6 +201,16 @@
 		bottom: 0;
 		width: 2px;
 		cursor: pointer;
+	}
+
+	.playhead {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 2px;
+		background: var(--color-accent);
+		pointer-events: none;
+		z-index: 5;
 	}
 
 	.annotation-range .tooltip,
